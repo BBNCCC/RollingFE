@@ -1,23 +1,38 @@
-import bnccLogo from '@/assets/images/bncc-logo.png'
+import { publicRoutes } from '@/config/routes'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full">
-        <div className="text-center space-y-6">
-          <img src={bnccLogo} alt="BNCC Logo" className="w-20 h-20 mx-auto object-contain" />
-
-          <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-gray-900">
-              BNCC Frontend
-            </h1>
-            <p className="text-gray-600">
-              React + Vite + Tailwind CSS
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        {publicRoutes.map((route) => {
+          if (route.children && route.children.length > 0) {
+            return (
+              <Route
+                path={route.path}
+                element={<route.component />}
+                key={route.key}
+              >
+                {route.children.map((childRoute) => (
+                  <Route
+                    path={childRoute.path}
+                    element={<childRoute.component />}
+                    key={childRoute.key}
+                  />
+                ))}
+              </Route>
+            )
+          }
+          return (
+            <Route
+              path={route.path}
+              element={<route.component />}
+              key={route.key}
+            />
+          )
+        })}
+      </Routes>
+    </BrowserRouter>
   )
 }
 
