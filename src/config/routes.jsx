@@ -1,15 +1,15 @@
-import Home from '@/pages/home'
-import Login from '@/pages/login'
+import HomePage from '@/pages/home'
+import LoginPage from '@/pages/login'
 
 export const publicRoutes = [
   {
     key: 'home',
     path: '/',
-    component: Home,
+    component: HomePage,
   },
   {
     key: 'login',
     path: '/login',
-    component: Login,
+    component: LoginPage,
   },
 ]
