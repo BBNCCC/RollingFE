@@ -2,7 +2,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useFeedback } from '@/hooks/useFeedback'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Settings, Loader2, Sparkles, Check } from 'lucide-react'
+import { Settings, Loader2, Sparkles, Check, User, Mail, Calendar, Building2, MessageSquare, Lightbulb } from 'lucide-react'
 import FeedbackIllustration from '@/assets/icons/FeedbackIllustration'
 
 function HomePage() {
@@ -23,7 +23,7 @@ function HomePage() {
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
 
-  const divisions = ['LnT', 'Eeo', 'PR', 'HRD', 'AnD']
+  const divisions = ['LnT', 'EEO', 'PR', 'HRD', 'RnD']
 
   const handleSettingsClick = () => {
     if (user) {
@@ -105,10 +105,6 @@ function HomePage() {
 
         <div className="relative z-10 text-center">
           <div className="mb-8">
-            <div className="inline-flex items-center gap-2 bg-white bg-opacity-10 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
-              <Sparkles className="w-4 h-4 text-white" />
-              <span className="text-white text-sm font-semibold">BNCC Feedback System</span>
-            </div>
             <h1 className="text-5xl font-bold text-white mb-4">
               Share Your<br />Experience
             </h1>
@@ -130,7 +126,7 @@ function HomePage() {
         <div className="absolute top-6 right-6 z-10">
           <button
             onClick={handleSettingsClick}
-            className="p-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all shadow-sm hover:shadow-md"
+            className="p-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all shadow-sm"
             title={user ? 'Go to Panel' : 'Login to access Panel'}
           >
             <Settings className="w-5 h-5 text-gray-600" />
@@ -139,44 +135,39 @@ function HomePage() {
 
         <div className="flex-1 overflow-y-auto px-6 lg:px-12 py-12">
           <div className="w-full max-w-xl mx-auto">
-            <div className="mb-8">
-              <div className="inline-flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-lg mb-4">
-                <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
-                <span className="text-blue-600 text-xs font-bold uppercase tracking-wider">
-                  Feedback Form
-                </span>
-              </div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-3">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 We'd love to hear from you
               </h2>
-              <p className="text-gray-500 text-sm leading-relaxed">
+              <p className="text-gray-500 text-xs leading-relaxed">
                 Please take a moment to share your thoughts about the event. Your feedback is valuable to us.
               </p>
             </div>
 
             {success && (
-              <div className="mb-6 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 text-green-700 px-5 py-4 rounded-xl flex items-start gap-3 animate-slide-down">
-                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Check className="w-4 h-4 text-white" />
+              <div className="mb-4 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-start gap-2 animate-slide-down">
+                <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Check className="w-3 h-3 text-white" />
                 </div>
                 <div>
-                  <p className="font-semibold text-sm">Feedback submitted successfully!</p>
-                  <p className="text-xs text-green-600 mt-0.5">Thank you for taking the time to share your thoughts.</p>
+                  <p className="font-semibold text-xs">Feedback submitted successfully!</p>
+                  <p className="text-[10px] text-green-600 mt-0.5">Thank you for taking the time to share your thoughts.</p>
                 </div>
               </div>
             )}
 
             {error && (
-              <div className="mb-6 bg-red-50 border-2 border-red-200 text-red-700 px-5 py-4 rounded-xl">
-                <p className="font-semibold text-sm">Error</p>
-                <p className="text-xs text-red-600 mt-0.5">{error}</p>
+              <div className="mb-4 bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-xl">
+                <p className="font-semibold text-xs">Error</p>
+                <p className="text-[10px] text-red-600 mt-0.5">{error}</p>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label htmlFor="name" className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-1.5">
+                    <User className="w-3.5 h-3.5 text-gray-700" />
                     Full Name <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -186,14 +177,15 @@ function HomePage() {
                     value={formData.name}
                     onChange={handleChange}
                     maxLength={255}
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white focus:shadow-sm transition text-sm text-gray-900 placeholder-gray-400"
+                    className="w-full px-3 py-2 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white focus:shadow-sm transition text-xs text-gray-900 placeholder-gray-400"
                     placeholder="John Doe"
                     required
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label htmlFor="email" className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-1.5">
+                    <Mail className="w-3.5 h-3.5 text-gray-700" />
                     Email Address <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -202,7 +194,7 @@ function HomePage() {
                     type="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white focus:shadow-sm transition text-sm text-gray-900 placeholder-gray-400"
+                    className="w-full px-3 py-2 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white focus:shadow-sm transition text-xs text-gray-900 placeholder-gray-400"
                     placeholder="john@example.com"
                     required
                   />
@@ -210,7 +202,8 @@ function HomePage() {
               </div>
 
               <div>
-                <label htmlFor="eventName" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="eventName" className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-gray-700" />
                   Event Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -220,14 +213,15 @@ function HomePage() {
                   value={formData.eventName}
                   onChange={handleChange}
                   maxLength={255}
-                  className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white focus:shadow-sm transition text-sm text-gray-900 placeholder-gray-400"
+                  className="w-full px-3 py-2 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white focus:shadow-sm transition text-xs text-gray-900 placeholder-gray-400"
                   placeholder="Enter the event name"
                   required
                 />
               </div>
 
               <div>
-                <label htmlFor="division" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="division" className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-1.5">
+                  <Building2 className="w-3.5 h-3.5 text-gray-700" />
                   Division <span className="text-red-500">*</span>
                 </label>
                 <select
@@ -235,7 +229,7 @@ function HomePage() {
                   name="division"
                   value={formData.division}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white focus:shadow-sm transition text-sm text-gray-900"
+                  className="w-full px-3 py-2 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white focus:shadow-sm transition text-xs text-gray-900"
                   required
                 >
                   <option value="">Select your division</option>
@@ -248,10 +242,10 @@ function HomePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                <label className="block text-xs font-semibold text-gray-900 mb-2">
                   How satisfied are you with our event? <span className="text-red-500">*</span>
                 </label>
-                <div className="grid grid-cols-5 gap-3">
+                <div className="grid grid-cols-5 gap-2">
                   {[
                     { value: 1, emoji: '😞', label: 'Very Bad', color: 'hover:border-red-300 hover:bg-red-50', selected: 'border-red-400 bg-gradient-to-br from-red-50 to-red-100' },
                     { value: 2, emoji: '😕', label: 'Bad', color: 'hover:border-orange-300 hover:bg-orange-50', selected: 'border-orange-400 bg-gradient-to-br from-orange-50 to-orange-100' },
@@ -263,21 +257,21 @@ function HomePage() {
                       key={rating.value}
                       type="button"
                       onClick={() => setFormData({ ...formData, rating: rating.value.toString() })}
-                      className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${
-                        formData.rating === rating.value.toString()
-                          ? `${rating.selected} shadow-md scale-105`
-                          : `border-gray-200 bg-white ${rating.color}`
-                      }`}
+                      className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all ${formData.rating === rating.value.toString()
+                        ? `${rating.selected} shadow-md scale-105`
+                        : `border-gray-200 bg-white ${rating.color}`
+                        }`}
                     >
-                      <span className="text-3xl mb-2">{rating.emoji}</span>
-                      <span className="text-xs font-semibold text-gray-700">{rating.label}</span>
+                      <span className="text-2xl mb-1">{rating.emoji}</span>
+                      <span className="text-[10px] font-semibold text-gray-700">{rating.label}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
               <div>
-                <label htmlFor="comment" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="comment" className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-1.5">
+                  <MessageSquare className="w-3.5 h-3.5 text-gray-700" />
                   Comments
                 </label>
                 <textarea
@@ -285,14 +279,15 @@ function HomePage() {
                   name="comment"
                   value={formData.comment}
                   onChange={handleChange}
-                  rows={4}
-                  className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white focus:shadow-sm transition resize-none text-sm text-gray-900 placeholder-gray-400"
+                  rows={3}
+                  className="w-full px-3 py-2 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white focus:shadow-sm transition resize-none text-xs text-gray-900 placeholder-gray-400"
                   placeholder="What did you like most about the event?"
                 />
               </div>
 
               <div>
-                <label htmlFor="suggestion" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="suggestion" className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-1.5">
+                  <Lightbulb className="w-3.5 h-3.5 text-gray-700" />
                   Suggestions for Improvement
                 </label>
                 <textarea
@@ -300,8 +295,8 @@ function HomePage() {
                   name="suggestion"
                   value={formData.suggestion}
                   onChange={handleChange}
-                  rows={4}
-                  className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white focus:shadow-sm transition resize-none text-sm text-gray-900 placeholder-gray-400"
+                  rows={3}
+                  className="w-full px-3 py-2 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white focus:shadow-sm transition resize-none text-xs text-gray-900 placeholder-gray-400"
                   placeholder="How can we make it better next time?"
                 />
               </div>
@@ -309,18 +304,15 @@ function HomePage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-5 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl text-sm"
               >
                 {loading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                  <div className="flex items-center justify-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
                     <span>Submitting...</span>
-                  </>
+                  </div>
                 ) : (
-                  <>
-                    <Check className="w-5 h-5" />
-                    <span>Submit Feedback</span>
-                  </>
+                  'Submit Feedback'
                 )}
               </button>
             </form>
