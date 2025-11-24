@@ -1,5 +1,6 @@
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
+import { Loader2 } from 'lucide-react'
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -7,9 +8,11 @@ function ProtectedRoute({ children }) {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+        <div className="flex items-center gap-2">
+          <Loader2 className="w-4 h-4 text-blue-600 animate-spin" />
+          <p className="text-gray-800 font-semibold text-sm">
+            Loading...
+          </p>
         </div>
       </div>
     )
