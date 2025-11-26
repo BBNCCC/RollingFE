@@ -22,6 +22,8 @@ function HomePage() {
   })
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
+  const [validationErrors, setValidationErrors] = useState({})
+  const [shake, setShake] = useState(false)
 
   const divisions = ['LnT', 'EEO', 'PR', 'HRD', 'RnD']
 
@@ -46,12 +48,80 @@ function HomePage() {
       ...formData,
       [e.target.name]: e.target.value,
     })
+    // Clear validation error when user starts typing
+    if (validationErrors[e.target.name]) {
+      setValidationErrors({
+        ...validationErrors,
+        [e.target.name]: ''
+      })
+    }
+  }
+
+  const validateForm = () => {
+    const errors = {}
+
+    if (!formData.name.trim()) {
+      errors.name = 'Nama harus diisi!'
+    }
+
+    if (!formData.email.trim()) {
+      errors.email = 'Email harus diisi!'
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = 'Format email tidak valid!'
+    }
+
+    if (!formData.eventName.trim()) {
+      errors.eventName = 'Nama event harus diisi!'
+    }
+
+    if (!formData.division) {
+      errors.division = 'Division harus dipilih!'
+    }
+
+    if (!formData.rating) {
+      errors.rating = 'Rating harus dipilih!'
+    }
+
+    return errors
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
     setSuccess(false)
+
+    // Validate form
+    const errors = validateForm()
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors)
+      setShake(true)
+
+      // Show error alert
+      const errorFields = Object.keys(errors).map(key => {
+        const fieldNames = {
+          name: 'Nama',
+          email: 'Email',
+          eventName: 'Nama Event',
+          division: 'Division',
+          rating: 'Rating'
+        }
+        return fieldNames[key]
+      }).join(', ')
+
+      setError(`Mohon lengkapi field berikut: ${errorFields}`)
+
+      // Remove shake animation after it completes
+      setTimeout(() => {
+        setShake(false)
+      }, 500)
+
+      // Auto-dismiss error message after 5 seconds
+      setTimeout(() => {
+        setError('')
+      }, 5000)
+
+      return
+    }
 
     try {
       const payload = {
@@ -66,6 +136,7 @@ function HomePage() {
 
       await createFeedback(payload)
       setSuccess(true)
+      setValidationErrors({})
       setFormData({
         name: '',
         email: '',
@@ -157,7 +228,7 @@ function HomePage() {
             )}
 
             {error && (
-              <div className="mb-4 bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-xl">
+              <div className={`mb-4 bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-xl ${shake ? 'shake' : ''}`}>
                 <p className="font-semibold text-xs">Error</p>
                 <p className="text-[10px] text-red-600 mt-0.5">{error}</p>
               </div>
@@ -177,10 +248,16 @@ function HomePage() {
                     value={formData.name}
                     onChange={handleChange}
                     maxLength={255}
-                    className="w-full px-3 py-2 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white focus:shadow-sm transition text-xs text-gray-900 placeholder-gray-400"
+                    className={`w-full px-3 py-2 bg-gray-50 border-2 rounded-xl focus:outline-none focus:bg-white focus:shadow-sm transition text-xs text-gray-900 placeholder-gray-400 ${
+                      validationErrors.name
+                        ? 'border-red-500 focus:border-red-500 shake'
+                        : 'border-gray-200 focus:border-blue-500'
+                    }`}
                     placeholder="John Doe"
-                    required
                   />
+                  {validationErrors.name && (
+                    <p className="text-red-500 text-[10px] mt-1 font-medium">{validationErrors.name}</p>
+                  )}
                 </div>
 
                 <div>
@@ -194,10 +271,16 @@ function HomePage() {
                     type="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white focus:shadow-sm transition text-xs text-gray-900 placeholder-gray-400"
+                    className={`w-full px-3 py-2 bg-gray-50 border-2 rounded-xl focus:outline-none focus:bg-white focus:shadow-sm transition text-xs text-gray-900 placeholder-gray-400 ${
+                      validationErrors.email
+                        ? 'border-red-500 focus:border-red-500 shake'
+                        : 'border-gray-200 focus:border-blue-500'
+                    }`}
                     placeholder="john@example.com"
-                    required
                   />
+                  {validationErrors.email && (
+                    <p className="text-red-500 text-[10px] mt-1 font-medium">{validationErrors.email}</p>
+                  )}
                 </div>
               </div>
 
@@ -213,10 +296,16 @@ function HomePage() {
                   value={formData.eventName}
                   onChange={handleChange}
                   maxLength={255}
-                  className="w-full px-3 py-2 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white focus:shadow-sm transition text-xs text-gray-900 placeholder-gray-400"
+                  className={`w-full px-3 py-2 bg-gray-50 border-2 rounded-xl focus:outline-none focus:bg-white focus:shadow-sm transition text-xs text-gray-900 placeholder-gray-400 ${
+                    validationErrors.eventName
+                      ? 'border-red-500 focus:border-red-500 shake'
+                      : 'border-gray-200 focus:border-blue-500'
+                  }`}
                   placeholder="Enter the event name"
-                  required
                 />
+                {validationErrors.eventName && (
+                  <p className="text-red-500 text-[10px] mt-1 font-medium">{validationErrors.eventName}</p>
+                )}
               </div>
 
               <div>
@@ -229,8 +318,11 @@ function HomePage() {
                   name="division"
                   value={formData.division}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white focus:shadow-sm transition text-xs text-gray-900"
-                  required
+                  className={`w-full px-3 py-2 bg-gray-50 border-2 rounded-xl focus:outline-none focus:bg-white focus:shadow-sm transition text-xs text-gray-900 ${
+                    validationErrors.division
+                      ? 'border-red-500 focus:border-red-500 shake'
+                      : 'border-gray-200 focus:border-blue-500'
+                  }`}
                 >
                   <option value="">Select your division</option>
                   {divisions.map((div) => (
@@ -239,13 +331,16 @@ function HomePage() {
                     </option>
                   ))}
                 </select>
+                {validationErrors.division && (
+                  <p className="text-red-500 text-[10px] mt-1 font-medium">{validationErrors.division}</p>
+                )}
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-gray-900 mb-2">
                   How satisfied are you with our event? <span className="text-red-500">*</span>
                 </label>
-                <div className="grid grid-cols-5 gap-2">
+                <div className={`grid grid-cols-5 gap-2 ${validationErrors.rating ? 'shake' : ''}`}>
                   {[
                     { value: 1, emoji: '😞', label: 'Very Bad', color: 'hover:border-red-300 hover:bg-red-50', selected: 'border-red-400 bg-gradient-to-br from-red-50 to-red-100' },
                     { value: 2, emoji: '😕', label: 'Bad', color: 'hover:border-orange-300 hover:bg-orange-50', selected: 'border-orange-400 bg-gradient-to-br from-orange-50 to-orange-100' },
@@ -256,17 +351,28 @@ function HomePage() {
                     <button
                       key={rating.value}
                       type="button"
-                      onClick={() => setFormData({ ...formData, rating: rating.value.toString() })}
-                      className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all ${formData.rating === rating.value.toString()
-                        ? `${rating.selected} shadow-md scale-105`
-                        : `border-gray-200 bg-white ${rating.color}`
-                        }`}
+                      onClick={() => {
+                        setFormData({ ...formData, rating: rating.value.toString() })
+                        if (validationErrors.rating) {
+                          setValidationErrors({ ...validationErrors, rating: '' })
+                        }
+                      }}
+                      className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all ${
+                        formData.rating === rating.value.toString()
+                          ? `${rating.selected} shadow-md scale-105`
+                          : validationErrors.rating
+                          ? 'border-red-500 bg-white hover:bg-red-50'
+                          : `border-gray-200 bg-white ${rating.color}`
+                      }`}
                     >
                       <span className="text-2xl mb-1">{rating.emoji}</span>
                       <span className="text-[10px] font-semibold text-gray-700">{rating.label}</span>
                     </button>
                   ))}
                 </div>
+                {validationErrors.rating && (
+                  <p className="text-red-500 text-[10px] mt-2 font-medium">{validationErrors.rating}</p>
+                )}
               </div>
 
               <div>
@@ -334,6 +440,22 @@ function HomePage() {
 
         .animate-slide-down {
           animation: slide-down 0.3s ease-out;
+        }
+
+        @keyframes shake {
+          0%, 100% {
+            transform: translateX(0);
+          }
+          10%, 30%, 50%, 70%, 90% {
+            transform: translateX(-8px);
+          }
+          20%, 40%, 60%, 80% {
+            transform: translateX(8px);
+          }
+        }
+
+        .shake {
+          animation: shake 0.5s ease-in-out;
         }
       `}</style>
     </div>
